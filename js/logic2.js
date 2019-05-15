@@ -21,130 +21,46 @@ d3.json(earth_url, function(data) {
 // ****************************************************************************************
 
 // Here's that feature function referenced above!
-function createFeatures(earthquakeData) {
+// function createFeatures(earthquakeData) {
 // We need to get our json data
-    d3.json(baseURL, function(earthquakeData) {
+    d3.json(earth_url, function(earthquakeData) {
     // we need a marker layer that we can put onto our map
         var dot = L.layerGroup();
-        // For each feature in the earthquake data, put it in a "records" variable. for now.
-        var quake = earthquakeData.features;
-    // // Loop through data
-    //     function prettyheat(mag){
-    //   mag = +mag;
-      
+        // Our URL call will pull a json object, and we want just the features if that object.
+        var quakes = earthquakeData.features;
+
+        for (var e = 0; e < quakes.length; e++) {
+            // the latitude/longitude data for each quake is located in the geometry part
+            var whereAt = quakes[i].geometry;
+            // How big was this quake?
+            var howBig = records[i].properties.mag;
+            // Then, if we have some useful data, let's put that data onto the map
+            if (whereAt) {
+            // Add a new marker to the cluster group and bind a pop-up
+                if (howBig < 1){
+                    mycolor = "lime"
+                }
+                else if (howBig < 2){
+                    mycolor = "Yellow"
+                }
+                else if (howBig < 3) {
+                    mycolor = "gold"
+                }
+                else if (howBig < 4) {
+                    mycolor = "orange"
+                }
+                else {mycolor = "firebrick"}
+            markers.addLayer(L.circleMarker([whereAt.coordinates[1], whereAt.coordinates[0]],
+                {
+                    radius: howBig*100,
+                    color: mycolor
+                })
+            .bindPopup(props.title));
+            }
   
-  
-    // }
-    for (var e = 0; e < earthquakeData.length; i++) {
-  
-      // Set the data location property to a variable
-      var location = records[i].geometry;
-      var props = records[i].properties;
-      // Check for location property
-      if (location) {
-  
-        // Add a new marker to the cluster group and bind a pop-up
-        markers.addLayer(L.circleMarker([location.coordinates[1], location.coordinates[0]])
-          .bindPopup(props.title));
-      }
-  
-    }
-  
+        }
     // Add our marker cluster layer to the map
     myMap.addLayer(markers);
-  
-  });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  function onEachFeature(feature, layer) {
-    layer.bindPopup("<h3>" + feature.properties.place +
-      "</h3><hr><p>" + new Date(feature.properties.time) + "</p>");
-  } 
-
-//   Define the marker specs
-
-  function mystyle(feature){ 
-    var style = {
-    radius: feature.properties.mag,
-    scale: ["gold", "deeppink"],
-    steps: 10,
-    mode: "q",
-    color: "#000",
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.8}
-    return style
-  };
-
-  // Create a GeoJSON layer containing the features array on the earthquakeData object
-  // Run the onEachFeature function once for each piece of data in the array
-  var earthquakes = L.geoJSON(earthquakeData, {
-    style: mystyle(feature),
-    onEachFeature: onEachFeature
-  });
-
-  // Sending our earthquakes layer to the createMap function
-  createMap(earthquakes);
-}
-
-// ****************************************************************************************
-function createMap(earthquakes) {
-
-  // Define streetmap and darkmap layers
-  var streetmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
-    id: "mapbox.streets",
-    accessToken: API_KEY
-  });
-
-  var darkmap = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-    maxZoom: 18,
-    id: "mapbox.dark",
-    accessToken: API_KEY
-  });
-
-  // Define a baseMaps object to hold our base layers
-  var baseMaps = {
-    "Street Map": streetmap,
-    "Dark Map": darkmap
-  };
-
-  // Create overlay object to hold our overlay layer
-  var overlayMaps = {
-    Earthquakes: earthquakes
-  };
-
-  // Create our map, giving it the streetmap and earthquakes layers to display on load
-  var myMap = L.map("map", {
-    center: [
-      37.09, -95.71
-    ],
-    zoom: 5,
-    layers: [streetmap, earthquakes]
-  });
-
-  // Create a layer control
-  // Pass in our baseMaps and overlayMaps
-  // Add the layer control to the map
-  L.control.layers(baseMaps, overlayMaps, {
-    collapsed: false
-  }).addTo(myMap);
-};
+    }
+// };
+    
