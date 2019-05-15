@@ -10,3 +10,15 @@ body,
 html {
   height: 100%;
 }
+
+.square{
+  height: 10px;
+  width: 30px;
+  display: inline-block;
+}
+.infoLegend{
+  background: rgb(254, 246, 246);
+  padding: 5px;
+  border-radius: 10px;
+  display: inline-block;
+}
